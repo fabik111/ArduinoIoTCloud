@@ -34,4 +34,9 @@
   #define HAS_TCP
 #endif
 
+#if defined(ARDUINO_NINA_ESP32)
+  #define HAS_TCP
+  #define BOARD_HAS_ECCX08
+#endif
+
 #endif /* ARDUINO_IOT_CLOUD_DEFINES_H_ */
