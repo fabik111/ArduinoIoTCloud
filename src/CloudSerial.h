@@ -19,7 +19,7 @@
 #define CLOUD_SERIAL_H
 
 #include <Arduino.h>
-#if defined(ARDUINO_ESP8266_ESP12) || defined(ARDUINO_ARCH_ESP32) || defined(ESP8266)
+#if defined(ARDUINO_ESP8266_ESP12) || defined(ARDUINO_ARCH_ESP32) || defined(ESP8266) || defined(ARDUINO_NINA_ESP32)
   #include "utility/RingBuffer.h"
 #else
   #include <RingBuffer.h>
