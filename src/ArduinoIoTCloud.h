@@ -134,6 +134,10 @@ class ArduinoIoTCloudClass {
     void addCallback(ArduinoIoTCloudEvent const event, OnCloudEventCallback callback);
 
 
+    ArduinoIoTSynchronizationStatus getSyncStatus() {
+      return _syncStatus;
+    }
+
   protected:
 
     virtual int writeStdout(const byte data[], int length) = 0;

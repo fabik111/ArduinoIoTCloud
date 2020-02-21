@@ -29,6 +29,10 @@
   RTCZero rtc;
 #endif
 
+#ifdef ARDUINO_NINA_ESP32
+  extern char CUSTOMCIAO[5];
+#endif
+
 #ifdef BOARD_HAS_ECCX08
   const static int keySlot									                 = 0;
   const static int compressedCertSlot						             = 10;
@@ -151,7 +155,7 @@ int ArduinoIoTCloudTCP::begin(Client& net, String brokerAddress, uint16_t broker
   _sslClient->setEccSlot(keySlot, ECCX08Cert.bytes(), ECCX08Cert.length());
   #elif defined(BOARD_ESP)
   _sslClient = new WiFiClientSecure();
-  _sslClient->setInsecure();
+  //_sslClient->setInsecure();
   #endif
 
   _mqttClient = new MqttClient(*_sslClient);
@@ -192,16 +196,32 @@ void ArduinoIoTCloudTCP::mqttClientBegin() {
 int ArduinoIoTCloudTCP::connect() {
 
   if (!_mqttClient->connect(_brokerAddress.c_str(), _brokerPort)) {
+    #ifdef ARDUINO_NINA_ESP32
+      memset(CUSTOMCIAO, 0x00, 5);
+      //memcpy(CUSTOMCIAO,"ERRC", sizeof("ERRC"));
+    #endif
     return CONNECT_FAILURE;
   }
   if (_mqttClient->subscribe(_stdinTopic) == 0) {
+    #ifdef ARDUINO_NINA_ESP32
+      memset(CUSTOMCIAO, 0x00, 5);
+      memcpy(CUSTOMCIAO,"ERSI", sizeof("ERSI"));
+    #endif
     return CONNECT_FAILURE_SUBSCRIBE;
   }
   if (_mqttClient->subscribe(_dataTopicIn) == 0) {
     return CONNECT_FAILURE_SUBSCRIBE;
+    #ifdef ARDUINO_NINA_ESP32
+      memset(CUSTOMCIAO, 0x00, 5);
+      memcpy(CUSTOMCIAO,"ERSN", sizeof("ERSN"));
+    #endif
   }
   if (_shadowTopicIn != "") {
     if (_mqttClient->subscribe(_shadowTopicIn) == 0) {
+      #ifdef ARDUINO_NINA_ESP32
+        memset(CUSTOMCIAO, 0x00, 5);
+        memcpy(CUSTOMCIAO,"ERSH", sizeof("ERSH"));
+      #endif
       return CONNECT_FAILURE_SUBSCRIBE;
     }
 
@@ -228,6 +248,29 @@ void ArduinoIoTCloudTCP::update(CallbackFunc onSyncCompleteCallback) {
   if (_iotStatus != ArduinoIoTConnectionStatus::CONNECTED) {
     return;
   }
+  /*
+  const uint16_t port = 8124;
+  const char * host = "192.168.43.189";
+
+  if (!(_connection->getClient()).connect(host, port)) {
+
+    Serial.println("Connection to host failed");
+
+    delay(1000);
+    return;
+  }
+ 
+  Serial.println("Connected to server successful!");
+ 
+  (_connection->getClient()).print("Hello from SAMD21!");
+
+  delay(10);
+
+  while ((_connection->getClient()).available()) {
+    char c = (_connection->getClient()).read();
+    Serial.write(c);
+  }
+  */
 
   // MTTQClient connected!, poll() used to retrieve data from MQTT broker
   _mqttClient->poll();
