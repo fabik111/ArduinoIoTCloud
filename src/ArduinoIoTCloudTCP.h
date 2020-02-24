@@ -62,6 +62,7 @@ class ArduinoIoTCloudTCP: public ArduinoIoTCloudClass {
     void update(CallbackFunc onSyncCompleteCallback) __attribute__((deprecated));
     void connectionCheck();
     void printDebugInfo();
+    int begin(String ssid, String password, String brokerAddress = DEFAULT_BROKER_ADDRESS_SECURE_AUTH, uint16_t brokerPort = DEFAULT_BROKER_PORT_SECURE_AUTH);
     #ifdef BOARD_HAS_ECCX08
     int begin(TcpIpConnectionHandler & connection, String brokerAddress = DEFAULT_BROKER_ADDRESS_SECURE_AUTH, uint16_t brokerPort = DEFAULT_BROKER_PORT_SECURE_AUTH);
     #else

@@ -88,6 +88,16 @@ ArduinoIoTCloudTCP::~ArduinoIoTCloudTCP() {
   }
 }
 
+int ArduinoIoTCloudTCP::begin(String ssid, String password, String brokerAddress, uint16_t brokerPort) {
+  _connection = new WiFiConnectionHandler(ssid.c_str(), password.c_str());
+  _brokerAddress = brokerAddress;
+  _brokerPort = brokerPort;
+  #ifdef ARDUINO_ARCH_SAMD
+  rtc.begin();
+  #endif
+  return begin(_connection->getClient(), _brokerAddress, _brokerPort);
+}
+
 int ArduinoIoTCloudTCP::begin(TcpIpConnectionHandler & connection, String brokerAddress, uint16_t brokerPort) {
   _connection = &connection;
   _brokerAddress = brokerAddress;
