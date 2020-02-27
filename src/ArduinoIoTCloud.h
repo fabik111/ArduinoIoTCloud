@@ -92,6 +92,14 @@ class ArduinoIoTCloudClass {
       return _device_id;
     };
 
+    ArduinoIoTConnectionStatus getIoTStatus() {
+      return _iotStatus;
+    }
+
+    ArduinoIoTSynchronizationStatus getIoTSyncStatus(){
+       return _syncStatus;
+    }
+
 #define addProperty( v, ...) addPropertyReal(v, #v, __VA_ARGS__)
 
     static unsigned long const DEFAULT_MIN_TIME_BETWEEN_UPDATES_MILLIS = 500; /* Data rate throttled to 2 Hz */
@@ -139,9 +147,7 @@ class ArduinoIoTCloudClass {
 
 
 
-    ArduinoIoTConnectionStatus getIoTStatus() {
-      return _iotStatus;
-    }
+
 
     ArduinoIoTConnectionStatus _iotStatus = ArduinoIoTConnectionStatus::IDLE;
 
