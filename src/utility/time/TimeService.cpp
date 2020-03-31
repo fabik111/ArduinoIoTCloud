@@ -78,7 +78,21 @@ unsigned long TimeService::getTime()
 #ifdef ARDUINO_ARCH_SAMD
   if(!_is_rtc_configured)
   {
-    rtc.setEpoch(getRemoteTime());
+    uint8_t attemps = 0;
+    unsigned long base_ts;
+    do {
+      base_ts = getRemoteTime();
+      if(base_ts != 0){
+        break;
+      }
+      attemps++;
+      delay(500);
+    } while(attemps < 5);
+
+    if(attemps == 5){
+      Serial.println("error retrieving timestamp");
+    }
+    rtc.setEpoch(base_ts);
     _is_rtc_configured = true;
   }
   return rtc.getEpoch();
