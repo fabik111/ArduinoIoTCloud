@@ -92,17 +92,20 @@ int ArduinoIoTCloudTCP::begin(String brokerAddress, uint16_t brokerPort) {
   byte deviceIdBytes[72];
   if (!ECCX08.begin()) {
     Debug.print(DBG_ERROR, "Cryptography processor failure. Make sure you have a compatible board.");
+    _iot_cloud_error = ArduinoIoTCloudError::CRYPTO_PROCESSOR_FAILURE;
     return 0;
   }
 
   if (!ECCX08.readSlot(deviceIdSlot, deviceIdBytes, sizeof(deviceIdBytes))) {
     Debug.print(DBG_ERROR, "Cryptography processor read failure.");
+    _iot_cloud_error = ArduinoIoTCloudError::CRYPTO_READ_FAILURE;
     return 0;
   }
   _device_id = (char*)deviceIdBytes;
 
   if (!ECCX08Cert.beginReconstruction(keySlot, compressedCertSlot, serialNumberAndAuthorityKeyIdentifierSlot)) {
     Debug.print(DBG_ERROR, "Cryptography certificate reconstruction failure.");
+    _iot_cloud_error = ArduinoIoTCloudError::CRYPTO_CERT_FAILURE;
     return 0;
   }
 
@@ -114,6 +117,7 @@ int ArduinoIoTCloudTCP::begin(String brokerAddress, uint16_t brokerPort) {
 
   if (!ECCX08Cert.endReconstruction()) {
     Debug.print(DBG_ERROR, "Cryptography certificate reconstruction failure.");
+    _iot_cloud_error = ArduinoIoTCloudError::CRYPTO_CERT_FAILURE;
     return 0;
   }
 
@@ -412,6 +416,7 @@ ArduinoIoTConnectionStatus ArduinoIoTCloudTCP::checkCloudConnection()
           CloudSerial.println("Hello from Cloud Serial!");
         } else if (ret_code_connect == CONNECT_FAILURE_SUBSCRIBE) {
           Debug.print(DBG_INFO, "ERROR - Please verify your THING ID");
+          _iot_cloud_error = ArduinoIoTCloudError::THING_ID_ERR;
         }
       }
       break;

@@ -30,6 +30,13 @@
 
 #include <ArduinoMqttClient.h>
 
+enum class ArduinoIoTCloudError{
+  NO_ERR,
+  CRYPTO_PROCESSOR_FAILURE,
+  CRYPTO_READ_FAILURE,
+  CRYPTO_CERT_FAILURE,
+  THING_ID_ERR
+};
 
 static char const DEFAULT_BROKER_ADDRESS_SECURE_AUTH[] = "mqtts-sa.iot.arduino.cc";
 static uint16_t const DEFAULT_BROKER_PORT_SECURE_AUTH = 8883;
@@ -65,6 +72,12 @@ class ArduinoIoTCloudTCP: public ArduinoIoTCloudClass {
 
     inline ConnectionHandler * getConnection() {
       return _connection;
+    }
+
+    ArduinoIoTCloudError getIoTCloudError(){
+      ArduinoIoTCloudError er = _iot_cloud_error;
+      _iot_cloud_error = ArduinoIoTCloudError::NO_ERR;
+      return er;
     }
 
     String getBrokerAddress() {
@@ -104,6 +117,8 @@ class ArduinoIoTCloudTCP: public ArduinoIoTCloudClass {
     WiFiClientSecure* _sslClient;
     String _password;
     #endif
+
+    ArduinoIoTCloudError _iot_cloud_error = ArduinoIoTCloudError::NO_ERR;
 
     MqttClient* _mqttClient;
 
