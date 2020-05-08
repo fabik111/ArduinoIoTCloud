@@ -6,6 +6,11 @@
   #define SECRET_PASS "YOUR_WIFI_PASSWORD"
 #endif
 
+/* ESP8266 */
+#if defined(BOARD_ESP8266)
+  #define SECRET_DEVICE_KEY "my-device-password"
+#endif
+
 /* MKR GSM 1400 */
 #if defined(BOARD_HAS_GSM)
   #define SECRET_PIN ""
@@ -20,3 +25,10 @@
   #define SECRET_APP_KEY ""
 #endif
 
+/* MKR NB 1500 */
+#if defined(BOARD_HAS_NB)
+  #define SECRET_PIN ""
+  #define SECRET_APN ""
+  #define SECRET_LOGIN ""
+  #define SECRET_PASS ""
+#endif
