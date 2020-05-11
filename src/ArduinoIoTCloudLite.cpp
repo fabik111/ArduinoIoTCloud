@@ -46,10 +46,10 @@ const static int CONNECT_FAILURE_SUBSCRIBE					         = -1;
    LOCAL MODULE FUNCTIONS
  ******************************************************************************/
 
-/*static unsigned long getTime()
+static unsigned long getTime()
 {
-  return time_service.getTime();
-}*/
+  return WiFi.getTime();
+}
 
 /******************************************************************************
    CTOR/DTOR
@@ -136,9 +136,9 @@ int ArduinoIoTCloudLite::begin(String brokerAddress, uint16_t brokerPort)
 
 NetworkConnectionState ArduinoIoTCloudLite::checkPhyConnection()
 {
-  NetworkConnectionState const connect_state = WiFi.connectionCheck();
+  NetworkConnectionState const connect_state = (NetworkConnectionState)WiFi.connectionCheck();
 
-  if (WiFi.connectionCheck() != NetworkConnectionState::CONNECTED)
+  if ((NetworkConnectionState)WiFi.connectionCheck() != NetworkConnectionState::CONNECTED)
   {
     if (_iot_status == ArduinoIoTConnectionStatus::CONNECTED)
     {
@@ -162,7 +162,7 @@ void ArduinoIoTCloudLite::update()
   }
 
   // MTTQClient connected!, poll() used to retrieve data from MQTT broker
-  WiFi.MQTTpoll()
+  WiFi.MQTTpoll();
   //_mqttClient->poll();
 
   switch (_syncStatus)

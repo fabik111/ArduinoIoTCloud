@@ -34,7 +34,7 @@
   #define HAS_TCP
 #endif
 
-#if defined(ARDUINO_AVR_UNO_WIFI_REV2)
+#if defined(ARDUINO_AVR_UNO_WIFI_REV2) || defined(ARDUINO_AVR_UNO)
   #define BOARD_AVR
 #endif
 

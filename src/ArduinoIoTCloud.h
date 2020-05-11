@@ -92,7 +92,9 @@ class ArduinoIoTCloudClass
     inline void     setDeviceId(String const device_id) { _device_id = device_id; };
     inline String & getDeviceId()                       { return _device_id; };
 
-    inline ConnectionHandler * getConnection()          { return _connection; }
+    #ifndef BOARD_AVR
+      inline ConnectionHandler * getConnection()          { return _connection; }
+    #endif
 
     void addCallback(ArduinoIoTCloudEvent const event, OnCloudEventCallback callback);
 

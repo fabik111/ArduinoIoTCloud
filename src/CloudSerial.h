@@ -23,7 +23,7 @@
  ******************************************************************************/
 
 #include <Arduino.h>
-#if defined(ARDUINO_ESP8266_ESP12) || defined(ARDUINO_ARCH_ESP32) || defined(ESP8266)
+#if defined(ARDUINO_ESP8266_ESP12) || defined(ARDUINO_ARCH_ESP32) || defined(ESP8266) || defined(BOARD_AVR)
   #include "utility/RingBuffer.h"
 #else
   #include <RingBuffer.h>
@@ -60,14 +60,16 @@ class CloudSerialClass : public Stream
     using Print::write; // pull in write(str) and write(buf, size) from Print
 
     operator bool();
+    
 
   protected:
 
     friend class ArduinoIoTCloudTCP;
-
-
+    friend class ArduinoIoTCloudLite;
 
     void appendStdin(const uint8_t *buffer, size_t size);
+
+    
 
   private:
     RingBufferN<CLOUD_SERIAL_TX_BUFFER_SIZE> _txBuffer;

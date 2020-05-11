@@ -23,8 +23,7 @@
  ******************************************************************************/
 
 #include <ArduinoIoTCloud.h>
-
-
+#include "utility/crypto/ECCX08CertLite.h"
 
 #include <WiFiNINA.h>
 
@@ -64,7 +63,7 @@ class ArduinoIoTCloudLite: public ArduinoIoTCloudClass
 
 
     int begin(char const *  SSID, char const *  PASS, String brokerAddress = DEFAULT_BROKER_ADDRESS_SECURE_AUTH, uint16_t brokerPort = DEFAULT_BROKER_PORT_SECURE_AUTH);
-
+    int begin(String brokerAddress = DEFAULT_BROKER_ADDRESS_SECURE_AUTH, uint16_t brokerPort = DEFAULT_BROKER_PORT_SECURE_AUTH);
 
     inline String   getBrokerAddress() const { return _brokerAddress; }
     inline uint16_t getBrokerPort   () const { return _brokerPort; }
@@ -79,7 +78,7 @@ class ArduinoIoTCloudLite: public ArduinoIoTCloudClass
 
     virtual int  connect       () override;
     virtual void disconnect    () override;
-    NetworkConnectionState checkPhyConnection() override;
+    NetworkConnectionState checkPhyConnection();
 
   private:
     static const int MQTT_TRANSMIT_BUFFER_SIZE = 256;
