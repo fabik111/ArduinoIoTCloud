@@ -25,7 +25,9 @@
 #include <ArduinoIoTCloud_Defines.h>
 
 #include <ArduinoCloudThing.h>
+#ifndef BOARD_AVR
 #include <Arduino_ConnectionHandler.h>
+#endif
 #include <Arduino_DebugUtils.h>
 
 #include "types/CloudWrapperBool.h"
@@ -98,7 +100,7 @@ class ArduinoIoTCloudClass
 
     static unsigned long const DEFAULT_MIN_TIME_BETWEEN_UPDATES_MILLIS = 500; /* Data rate throttled to 2 Hz */
 
-    /* The following methods are used for non-LoRa boards which can use the 
+    /* The following methods are used for non-LoRa boards which can use the
      * name of the property to identify a given property within a CBOR message.
      */
 
@@ -136,12 +138,14 @@ class ArduinoIoTCloudClass
     virtual void disconnect() = 0;
 
     inline ArduinoIoTConnectionStatus getIoTStatus() { return _iot_status; }
-
+    #ifndef BOARD_AVR
     ConnectionHandler * _connection = nullptr;
+    #endif
     ArduinoCloudThing _thing;
     ArduinoIoTConnectionStatus _iot_status = ArduinoIoTConnectionStatus::IDLE;
-
+          #ifndef BOARD_AVR
            NetworkConnectionState checkPhyConnection();
+           #endif
            void execCloudEventCallback(ArduinoIoTCloudEvent const event);
     static void printConnectionStatus(ArduinoIoTConnectionStatus status);
 
@@ -156,6 +160,8 @@ class ArduinoIoTCloudClass
   #include "ArduinoIoTCloudTCP.h"
 #elif defined(HAS_LORA)
   #include "ArduinoIoTCloudLPWAN.h"
+#elif defined(BOARD_AVR)
+  #include "ArduinoIoTCloudLite.h"
 #endif
 
 #endif

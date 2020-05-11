@@ -34,4 +34,8 @@
   #define HAS_TCP
 #endif
 
+#if defined(ARDUINO_AVR_UNO_WIFI_REV2)
+  #define BOARD_AVR
+#endif
+
 #endif /* ARDUINO_IOT_CLOUD_DEFINES_H_ */

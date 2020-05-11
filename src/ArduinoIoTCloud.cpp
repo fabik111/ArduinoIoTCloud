@@ -18,7 +18,7 @@
 /******************************************************************************
  * INCLUDE
  ******************************************************************************/
-
+#include <ArduinoIoTCloud_Defines.h>
 #include <ArduinoIoTCloud.h>
 
 /******************************************************************************
@@ -144,7 +144,7 @@ ArduinoCloudProperty& ArduinoIoTCloudClass::addPropertyReal(String& property, St
 /******************************************************************************
  * PROTECTED MEMBER FUNCTIONS
  ******************************************************************************/
-
+#ifndef BOARD_AVR
 NetworkConnectionState ArduinoIoTCloudClass::checkPhyConnection()
 {
   NetworkConnectionState const connect_state = _connection->check();
@@ -159,6 +159,7 @@ NetworkConnectionState ArduinoIoTCloudClass::checkPhyConnection()
 
   return connect_state;
 }
+#endif
 
 void ArduinoIoTCloudClass::execCloudEventCallback(ArduinoIoTCloudEvent const event)
 {

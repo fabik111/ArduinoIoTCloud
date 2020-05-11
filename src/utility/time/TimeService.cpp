@@ -20,7 +20,7 @@
  **************************************************************************************/
 
 #include "../../ArduinoIoTCloud_Defines.h"
-#ifndef HAS_LORA
+#if !defined(HAS_LORA) || !defined(BOARD_AVR)
 
 #include "TimeService.h"
 
