@@ -162,7 +162,11 @@ void ArduinoIoTCloudLite::update()
   }
 
   // MTTQClient connected!, poll() used to retrieve data from MQTT broker
-  WiFi.MQTTpoll();
+  int mqttMessageLength = WiFi.MQTTpoll();
+  if(mqttMessageLength != 0)
+  {
+    ArduinoIoTCloudLite::onMessage(mqttMessageLength);
+  }
   //_mqttClient->poll();
 
   switch (_syncStatus)
