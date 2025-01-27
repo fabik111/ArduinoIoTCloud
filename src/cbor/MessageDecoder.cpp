@@ -21,6 +21,9 @@
 #include "MessageDecoder.h"
 #include <AIoTC_Config.h>
 
+#include <settings/settings.h>
+#include <settings/settings_default.h>
+
 /******************************************************************************
     PUBLIC MEMBER FUNCTIONS
  ******************************************************************************/
@@ -265,6 +268,7 @@ CBORMessageDecoder::ArrayParserState CBORMessageDecoder::decodeProvisioningComma
   return ArrayParserState::LeaveArray;
 }
 
+#if defined(BOARD_HAS_LORA)
 CBORMessageDecoder::ArrayParserState CBORMessageDecoder::decodeProvisioningLoRaConfigMessage(CborValue * param, Message * message) {
   ProvisioningLoRaConfigMessage * provisioningLoRaConfig = (ProvisioningLoRaConfigMessage *) message;
   // Message is composed of 5 parameters: app_eui, app_key, band, channel_mask, device_class
@@ -311,9 +315,15 @@ CBORMessageDecoder::ArrayParserState CBORMessageDecoder::decodeProvisioningLoRaC
     return ArrayParserState::Error;
   }
 
+  if (provisioningLoRaConfig->params.deviceClass[0] == '\0') {
+    provisioningLoRaConfig->params.deviceClass[0] = models::settingsDefault(NetworkAdapter::LORA).lora.deviceClass;
+  }
+
   return ArrayParserState::LeaveArray;
 }
+#endif
 
+#if defined(BOARD_HAS_CATM1_NBIOT)
 CBORMessageDecoder::ArrayParserState CBORMessageDecoder::decodeProvisioningCATM1ConfigMessage(CborValue * param, Message * message) {
   ProvisioningCATM1ConfigMessage * provisioningCATM1Config = (ProvisioningCATM1ConfigMessage *) message;
   CborValue array_iter;
@@ -346,7 +356,11 @@ CBORMessageDecoder::ArrayParserState CBORMessageDecoder::decodeProvisioningCATM1
     return ArrayParserState::Error;
   }
 
-  for(size_t i = 0; i < arrayLength; i++) {
+  if (arrayLength == 0) {
+    provisioningCATM1Config->params.band[0] = models::settingsDefault(NetworkAdapter::CATM1).catm1.band;
+  }
+
+  for (size_t i = 0; i < arrayLength; i++) {
     if (!cbor_value_is_unsigned_integer(&array_iter)) {
       return ArrayParserState::Error;
     }
@@ -391,7 +405,9 @@ CBORMessageDecoder::ArrayParserState CBORMessageDecoder::decodeProvisioningCATM1
 
   return ArrayParserState::LeaveArray;
 }
+#endif
 
+#if defined(BOARD_HAS_ETHERNET)
 CBORMessageDecoder::ArrayParserState CBORMessageDecoder::decodeProvisioningEthernetConfigMessage(CborValue * param, Message * message){
   ProvisioningEthernetConfigMessage * provisioningEthernetConfig = (ProvisioningEthernetConfigMessage *) message;
 
@@ -439,6 +455,10 @@ CBORMessageDecoder::ArrayParserState CBORMessageDecoder::decodeProvisioningEther
     }
   }
 
+  if (provisioningEthernetConfig->params.timeout == 0) {
+    provisioningEthernetConfig->params.timeout = models::settingsDefault(NetworkAdapter::ETHERNET).eth.timeout;
+  }
+
   // Next
   if (cbor_value_advance(param) != CborNoError) {
     return ArrayParserState::Error;
@@ -449,10 +469,15 @@ CBORMessageDecoder::ArrayParserState CBORMessageDecoder::decodeProvisioningEther
     if (cbor_value_get_int(param, &val) == CborNoError) {
       provisioningEthernetConfig->params.response_timeout = val;
     }
+  } 
+  
+  if(provisioningEthernetConfig->params.response_timeout == 0) {
+    provisioningEthernetConfig->params.response_timeout = models::settingsDefault(NetworkAdapter::ETHERNET).eth.response_timeout;
   }
 
   return ArrayParserState::LeaveArray;
 }
+#endif
 
 bool CBORMessageDecoder::getProvisioningIPStructFromMessage(CborValue *param, ProvisioningIPStruct *ipStruct)
 {
@@ -546,9 +571,11 @@ CBORMessageDecoder::ArrayParserState CBORMessageDecoder::handle_Param(CborValue 
   
   case CommandId::ProvisioningCommands:
     return CBORMessageDecoder::decodeProvisioningCommandsMessage(param, message);
-
+  
+  #if defined(BOARD_HAS_LORA)
   case CommandId::ProvisioningLoRaConfig:
     return CBORMessageDecoder::decodeProvisioningLoRaConfigMessage(param, message);
+  #endif
   
   case CommandId::ProvisioningGSMConfig:
     return CBORMessageDecoder::decodeProvisioningCellularConfigMessage(param, message);
@@ -556,12 +583,16 @@ CBORMessageDecoder::ArrayParserState CBORMessageDecoder::handle_Param(CborValue 
   case CommandId::ProvisioningNBIOTConfig:
     return CBORMessageDecoder::decodeProvisioningCellularConfigMessage(param, message);
   
+  #if defined(BOARD_HAS_CATM1_NBIOT)
   case CommandId::ProvisioningCATM1Config:
     return CBORMessageDecoder::decodeProvisioningCATM1ConfigMessage(param, message);
-  
+  #endif
+
+  #if defined(BOARD_HAS_ETHERNET)  
   case CommandId::ProvisioningEthernetConfig:
     return CBORMessageDecoder::decodeProvisioningEthernetConfigMessage(param, message);
-  
+  #endif
+
   case CommandId::ProvisioningCellularConfig:
     return CBORMessageDecoder::decodeProvisioningCellularConfigMessage(param, message);
 

@@ -24,6 +24,7 @@
 #include "CBOR.h"
 #include "../interfaces/Decoder.h"
 #include <Arduino_TinyCBOR.h>
+#include <ConnectionHandlerDefinitions.h>
 
 /******************************************************************************
    CLASS DECLARATION
@@ -74,9 +75,15 @@ private:
   ArrayParserState decodeProvisioningTimestampMessage(CborValue * param, Message * message);
   ArrayParserState decodeProvisioningCommandsMessage(CborValue * param, Message * message);
   ArrayParserState decodeProvisioningWifiConfigMessage(CborValue * param, Message * message);
+  #if defined(BOARD_HAS_LORA)
   ArrayParserState decodeProvisioningLoRaConfigMessage(CborValue * param, Message * message);
+  #endif
+  #if defined(BOARD_HAS_CATM1_NBIOT)
   ArrayParserState decodeProvisioningCATM1ConfigMessage(CborValue * param, Message * message);
+  #endif
+  #if defined(BOARD_HAS_ETHERNET)
   ArrayParserState decodeProvisioningEthernetConfigMessage(CborValue * param, Message * message);
+  #endif
   bool getProvisioningIPStructFromMessage(CborValue * param, ProvisioningIPStruct * message);
   ArrayParserState decodeProvisioningCellularConfigMessage(CborValue * param, Message * message);
 
