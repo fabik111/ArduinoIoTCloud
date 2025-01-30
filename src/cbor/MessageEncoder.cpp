@@ -234,7 +234,7 @@ CborError CBORMessageEncoder::encodeProvisioningUniqueHardwareId(CborEncoder * a
 CborError CBORMessageEncoder::encodeProvisioningJWT(CborEncoder * array_encoder, Message * message)
 {
   ProvisioningJWTMessage * provisioningJWT = (ProvisioningJWTMessage *) message;
-  CHECK_CBOR(cbor_encode_byte_string(array_encoder, (uint8_t *) provisioningJWT->params.jwt, PROVISIONING_JWT_SIZE));
+  CHECK_CBOR(cbor_encode_byte_string(array_encoder, (uint8_t *) provisioningJWT->params.jwt, strlen(provisioningJWT->params.jwt)));
   return CborNoError;
 }
 
