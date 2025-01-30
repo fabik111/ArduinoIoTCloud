@@ -147,7 +147,7 @@ class ArduinoIoTCloudClass
   protected:
 
     ConnectionHandler * _connection;
-    NetworkConfigurator * _configurator;
+    NetworkConfiguratorClass * _configurator;
     TimeServiceClass & _time_service;
     String _thing_id;
     String _lib_version;

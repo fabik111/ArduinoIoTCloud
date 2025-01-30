@@ -44,4 +44,4 @@ void initProperties() {
 
 GenericConnectionHandler ArduinoIoTPreferredConnection;
 
-NetworkConfigurator NetworkConf(ConfiguratorManager, ArduinoIoTPreferredConnection);
+NetworkConfiguratorClass NetworkConf(ConfiguratorManager, ArduinoIoTPreferredConnection);
