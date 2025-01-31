@@ -27,7 +27,7 @@
 #define ID_SIZE                     16
 #define MAX_LIB_VERSION_SIZE        10
 #define UHWID_SIZE                  32
-#define PROVISIONING_JWT_SIZE      268 // Max length of jwt is 268
+#define PROVISIONING_JWT_SIZE      269 // Max length of jwt is 268 + \0
 #define BLE_MAC_ADDRESS_SIZE         6
 #define WIFI_SSID_SIZE              33 // Max length of ssid is 32 + \0
 #define WIFI_PWD_SIZE               64 // Max length of password is 63 + \0
