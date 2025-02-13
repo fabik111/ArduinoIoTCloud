@@ -25,6 +25,7 @@
 #include <AIoTC_Config.h>
 
 #include <Arduino_ConnectionHandler.h>
+#include <NetworkConfigurator.h>
 
 #if defined(DEBUG_ERROR) || defined(DEBUG_WARNING) || defined(DEBUG_INFO) || defined(DEBUG_DEBUG) || defined(DEBUG_VERBOSE)
 #  include <Arduino_DebugUtils.h>
@@ -101,6 +102,8 @@ class ArduinoIoTCloudClass
     inline unsigned long getInternalTime()              { return _time_service.getTime(); }
     inline unsigned long getLocalTime()                 { return _time_service.getLocalTime(); }
 
+    inline void setConfigurator(NetworkConfiguratorClass & configurator) { _configurator = &configurator; }
+
     void addCallback(ArduinoIoTCloudEvent const event, OnCloudEventCallback callback);
 
 #define addProperty( v, ...) addPropertyReal(v, #v, __VA_ARGS__)
@@ -146,6 +149,7 @@ class ArduinoIoTCloudClass
   protected:
 
     ConnectionHandler * _connection;
+    NetworkConfiguratorClass * _configurator = nullptr;
     TimeServiceClass & _time_service;
     String _thing_id;
     String _lib_version;
