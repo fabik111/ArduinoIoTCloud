@@ -133,7 +133,7 @@ jobs:
               - name: Blues Wireless Notecard
               - name: RTCZero
               - source-url: https://github.com/andreagilardoni/WiFiNINA.git
-                version: ca7a9224f86b9aaf00de4f7feccea583a23b3d53
+                version: 31616ac5a30f6281c68f982bc39800771b2fbaeb
               - name: Arduino_JSON
               - source-url: https://github.com/adafruit/Adafruit_SleepyDog.git
             sketch-paths: |
@@ -183,8 +183,7 @@ jobs:
               - name: ArduinoECCX08
               - name: Blues Wireless Notecard
               - name: RTCZero
-              - source-url: https://github.com/fabik111/MKRNB
-                version: f514c2a497b80a1f1992f62156f4ba12569db464
+              - name: MKRNB
               - source-url: https://github.com/adafruit/Adafruit_SleepyDog.git
             sketch-paths: |
               - examples/ArduinoIoTCloud-Notecard
