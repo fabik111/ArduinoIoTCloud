@@ -386,4 +386,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: provisioning-${{ matrix.board.artifact-name-suffix }}
-          path: ${{ runner.temp }}/arduino-cli-output/Provisioning*
+          path: ${{ runner.temp }}/arduino-cli-output/Provisioning_2.0*
