@@ -27,11 +27,10 @@ jobs:
         - name: ArduinoHttpClient
         - name: Arduino_DebugUtils
         - name: ArduinoMqttClient
-        - source-url: https://github.com/fabik111/Arduino_SecureElement.git
-          version: f5a23964a1c70048e48d5ed2d2657004446f0e3d
-        - source-url: https://github.com/fabik111/Arduino_CloudUtils.git
-          version: a8b52eaf500c63b2e8bd3e4b6f6c77b70fc3e65d
-        - source-url: https://github.com/arduino-libraries/Arduino_KVStore.git
+        - source-url: https://github.com/pennam/Arduino_SecureElement.git
+          version: 4900febf84435c1a06bb13451bced3bac6f16e76
+        - source-url: https://github.com/arduino-libraries/Arduino_CloudUtils.git
+        - name: Arduino_KVStore
         - source-url: https://github.com/arduino-libraries/Arduino_UniqueHWId.git
         - source-url: https://github.com/arduino-libraries/Arduino_NetworkConfigurator.git
       # sketch paths to compile (recursive) for all boards
