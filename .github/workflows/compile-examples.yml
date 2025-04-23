@@ -196,7 +196,8 @@ jobs:
               - name: Blues Wireless Notecard
               - name: ArduinoBLE
               - name: Arduino_KVStore
-              - name: Arduino_NetworkConfigurator
+              - source-url: https://github.com/arduino-libraries/Arduino_NetworkConfigurator.git
+                version: 80ece657c0ec1e0ea6f181592e88f3dd6211b424
             sketch-paths: |
               - examples/ArduinoIoTCloud-NetConfig
               - examples/ArduinoIoTCloud-DeferredOTA
@@ -213,7 +214,8 @@ jobs:
               - name: Blues Wireless Notecard
               - name: ArduinoBLE
               - name: Arduino_KVStore
-              - name: Arduino_NetworkConfigurator
+              - source-url: https://github.com/arduino-libraries/Arduino_NetworkConfigurator.git
+                version: 80ece657c0ec1e0ea6f181592e88f3dd6211b424
             sketch-paths: |
               - examples/ArduinoIoTCloud-NetConfig
               - examples/ArduinoIoTCloud-DeferredOTA
@@ -232,7 +234,8 @@ jobs:
               - name: Blues Wireless Notecard
               - name: ArduinoBLE
               - name: Arduino_KVStore
-              - name: Arduino_NetworkConfigurator
+              - source-url: https://github.com/arduino-libraries/Arduino_NetworkConfigurator.git
+                version: 80ece657c0ec1e0ea6f181592e88f3dd6211b424
             sketch-paths: |
               - examples/ArduinoIoTCloud-NetConfig
               - examples/ArduinoIoTCloud-DeferredOTA
@@ -251,7 +254,8 @@ jobs:
               - name: Blues Wireless Notecard
               - name: ArduinoBLE
               - name: Arduino_KVStore
-              - name: Arduino_NetworkConfigurator
+              - source-url: https://github.com/arduino-libraries/Arduino_NetworkConfigurator.git
+                version: 80ece657c0ec1e0ea6f181592e88f3dd6211b424
             sketch-paths: |
               - examples/ArduinoIoTCloud-NetConfig
               - examples/ArduinoIoTCloud-DeferredOTA
@@ -269,7 +273,8 @@ jobs:
               - name: Blues Wireless Notecard
               - name: ArduinoBLE
               - name: Arduino_KVStore
-              - name: Arduino_NetworkConfigurator
+              - source-url: https://github.com/arduino-libraries/Arduino_NetworkConfigurator.git
+                version: 80ece657c0ec1e0ea6f181592e88f3dd6211b424
             sketch-paths: |
               - examples/ArduinoIoTCloud-NetConfig
               - examples/ArduinoIoTCloud-Notecard
@@ -285,7 +290,8 @@ jobs:
               - name: Blues Wireless Notecard
               - name: ArduinoBLE
               - name: Arduino_KVStore
-              - name: Arduino_NetworkConfigurator
+              - source-url: https://github.com/arduino-libraries/Arduino_NetworkConfigurator.git
+                version: 80ece657c0ec1e0ea6f181592e88f3dd6211b424
             sketch-paths: |
               - examples/ArduinoIoTCloud-NetConfig
               - examples/ArduinoIoTCloud-Notecard
