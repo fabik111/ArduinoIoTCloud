@@ -8,7 +8,7 @@
 
 #pragma once
 #include "Arduino.h"
-#include "ConfiguratorAgents/AgentsManager.h"
+#include "configuratorAgents/AgentsManager.h"
 #include <Arduino_SecureElement.h>
 #include "utility/LEDFeedback.h"
 
