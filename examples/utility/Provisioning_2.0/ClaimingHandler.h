@@ -10,7 +10,7 @@
 #include "Arduino.h"
 #include "ConfiguratorAgents/AgentsManager.h"
 #include <Arduino_SecureElement.h>
-#include "Utility/LEDFeedback/LEDFeedback.h"
+#include "utility/LEDFeedback.h"
 
 typedef bool (*ClearStoredCredentialsHandler)();
 class ClaimingHandlerClass {
