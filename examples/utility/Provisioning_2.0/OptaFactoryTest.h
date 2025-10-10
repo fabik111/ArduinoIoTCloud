@@ -16,19 +16,14 @@ public:
 private:
   void ledManage();
   void inputManage();
-  void rs485Manage();
   void printInfo();
   void printModel();
-  static void rs485Rcv();
-  static inline uint32_t _rs485_pulse = 0;
   bool _all_on = false;
-  bool _rs485_test_done = false;
   bool _test_running = false;
   OptaBoardInfo *_info;
   uint32_t _ms10 = 0;
   uint32_t _ms100 = 0;
   uint32_t _nextBoardInfoPrint = 0;
-  uint32_t _nextRS485Run = 0;
 };
 
 extern OptaFactoryTestClass OptaFactoryTest;

@@ -8,7 +8,8 @@
 
 #ifdef ARDUINO_OPTA
 #include "OptaFactoryTest.h"
-
+#include <Arduino.h>
+#include <mbed.h>
 
 #define VID_FINDER            0x35D1
 #define VID_ARDUINO           0x2341
@@ -44,7 +45,85 @@ const uint8_t n_input[N_ANALOG_INPUTS] = {A0, A1, A2, A3, A4, A5, A6, A7};
 const uint8_t n_led[N_LED] = {LEDR, LEDG, LEDB, 154u, 155u, 157u, 153u};
 float v_input[N_ANALOG_INPUTS];
 
+static rtos::Thread threadRs485;
+volatile uint32_t rs485_pulse = 0;
+volatile bool rs485_test_done = false;
+
 OptaBoardInfo* boardInfo();
+
+void rs485IRQ() {
+  rs485_pulse++;
+}
+
+void rs485Manage() {
+  while(1) {
+    delay(1000);
+    bool rs485_ok = false;
+    uint32_t t_rs485_pulse = 0;
+    digitalWrite(MY_RS485_RE_PIN, HIGH);
+    digitalWrite(MY_RS485_DE_PIN, HIGH);
+    delay(10);
+
+    for(uint32_t i = 0; i < N_PULSE; i++)
+    {
+      digitalWrite(MY_RS485_TX_PIN, HIGH);
+      delay(1);
+      digitalWrite(MY_RS485_TX_PIN, LOW);
+      delay(1);
+    }
+    delay(10);
+    digitalWrite(MY_RS485_DE_PIN, LOW);
+    digitalWrite(MY_RS485_RE_PIN, LOW);
+
+    /* Search start of incoming transmission */
+    rs485_pulse = 0;
+    while((rs485_pulse == 0) && (t_rs485_pulse < 200))
+    {
+      t_rs485_pulse++;
+      delay(1);
+    }
+
+    rs485_pulse = 0;
+
+    if(t_rs485_pulse < 200)
+    {
+      /* Receive data */
+      t_rs485_pulse = 0;
+      uint32_t rs485_pulse_old = 0;
+      for(t_rs485_pulse = 0; t_rs485_pulse < 20; t_rs485_pulse++)
+      {
+        if(rs485_pulse_old != rs485_pulse)
+        {
+          rs485_pulse_old = rs485_pulse;
+          t_rs485_pulse = 0;
+        }
+        delay(10);
+      }
+
+      /* End of receiving */
+      if(rs485_pulse > 0)
+      {
+        if((rs485_pulse == N_PULSE) || (rs485_pulse == N_PULSE + 1))
+        {
+          Serial.println("RS485 check OK");
+          rs485_ok = true;
+        }
+      }
+    }
+
+    if(rs485_ok == true)
+    {
+      digitalWrite(RL1, HIGH);
+      digitalWrite(LED1_SYS, HIGH);
+      delay(1000);
+      digitalWrite(RL1, LOW);
+      digitalWrite(LED1_SYS, LOW);
+      rs485_test_done = true;
+      while(1);
+    }
+
+  }
+}
 
 void OptaFactoryTestClass::begin() {
   pinMode(LED1_SYS, OUTPUT);
@@ -161,11 +240,10 @@ void OptaFactoryTestClass::optaIDTest() {
     digitalWrite(MY_RS485_RE_PIN, LOW);
 
     pinMode(MY_RS485_RX_PIN, INPUT);
-    attachInterrupt(digitalPinToInterrupt(MY_RS485_RX_PIN), rs485Rcv, FALLING);
-    _nextBoardInfoPrint = millis();
-    _nextRS485Run = millis() + 2000;
+    attachInterrupt(digitalPinToInterrupt(MY_RS485_RX_PIN), rs485IRQ, FALLING);
+    threadRs485.start(rs485Manage);
   }
-
+  _nextBoardInfoPrint = millis();
 }
 
 bool OptaFactoryTestClass::poll() {
@@ -190,11 +268,11 @@ bool OptaFactoryTestClass::poll() {
     printModel();
   }
 
-  if(_nextRS485Run < millis() && _info->_board_functionalities.rs485 == 1 && _rs485_test_done == false)
+  if(rs485_test_done == true)
   {
-    _nextRS485Run = millis() + 1000;
-    rs485Manage();
+    _test_running = false;
   }
+
   return _test_running;
 }
 
@@ -301,73 +379,6 @@ void OptaFactoryTestClass::inputManage(void)
     _all_on = false;
   }
 }
-
-void OptaFactoryTestClass::rs485Manage() {
-  bool rs485_ok = false;
-  uint32_t t_rs485_pulse = 0;
-  digitalWrite(MY_RS485_RE_PIN, HIGH);
-  digitalWrite(MY_RS485_DE_PIN, HIGH);
-  delay(10);
-
-  for(uint32_t i = 0; i < N_PULSE; i++)
-  {
-    digitalWrite(MY_RS485_TX_PIN, HIGH);
-    delay(1);
-    digitalWrite(MY_RS485_TX_PIN, LOW);
-    delay(1);
-  }
-  delay(10);
-  digitalWrite(MY_RS485_DE_PIN, LOW);
-  digitalWrite(MY_RS485_RE_PIN, LOW);
-
-  /* Search start of incoming transmission */
-  _rs485_pulse = 0;
-  while((_rs485_pulse == 0) && (t_rs485_pulse < 200))
-  {
-    t_rs485_pulse++;
-    delay(1);
-  }
-
-  _rs485_pulse = 0;
-
-  if(t_rs485_pulse < 200)
-  {
-    /* Receive data */
-    t_rs485_pulse = 0;
-    uint32_t rs485_pulse_old = 0;
-    for(t_rs485_pulse = 0; t_rs485_pulse < 20; t_rs485_pulse++)
-    {
-      if(rs485_pulse_old != _rs485_pulse)
-      {
-        rs485_pulse_old = _rs485_pulse;
-        t_rs485_pulse = 0;
-      }
-      delay(10);
-    }
-
-    /* End of receiving */
-    if(_rs485_pulse > 0)
-    {
-      if((_rs485_pulse == N_PULSE) || (_rs485_pulse == N_PULSE + 1))
-      {
-        Serial.println("RS485 check OK");
-        rs485_ok = true;
-      }
-    }
-  }
-
-  if(rs485_ok == true)
-  {
-    digitalWrite(RL1, HIGH);
-    digitalWrite(LED1_SYS, HIGH);
-    delay(1000);
-    digitalWrite(RL1, LOW);
-    digitalWrite(LED1_SYS, LOW);
-    _rs485_test_done = true;
-    _test_running = false;
-  }
-}
-
 
 void OptaFactoryTestClass::printInfo() {
   Serial.print("\n");
@@ -482,10 +493,6 @@ void OptaFactoryTestClass::printModel(void)
     } break;
   }
   Serial.println(" <<<\n");
-}
-
-void OptaFactoryTestClass::rs485Rcv() {
-  _rs485_pulse++;
 }
 
 OptaFactoryTestClass OptaFactoryTest;
